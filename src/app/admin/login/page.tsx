@@ -2,19 +2,19 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, User, KeyRound, ShieldAlert, ArrowRight, RefreshCw } from "lucide-react";
+import { Lock, Mail, KeyRound, ShieldAlert, ArrowRight, RefreshCw } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !password) {
-      setError("Username and password are required.");
+    if (!identifier || !password) {
+      setError("Email/Username and password are required.");
       return;
     }
 
@@ -25,7 +25,7 @@ export default function AdminLoginPage() {
       const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username: identifier, email: identifier, password }),
       });
 
       const data = await res.json();
@@ -48,7 +48,7 @@ export default function AdminLoginPage() {
             <Lock className="w-7 h-7" />
           </div>
           <h1 className="text-2xl font-extrabold text-white tracking-tight">Admin Portal Login</h1>
-          <p className="text-xs text-gray-400">Sign in to manage print jobs, kiosks, and system analytics.</p>
+          <p className="text-xs text-gray-400">Sign in with Supabase Auth or Admin credentials.</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
@@ -60,14 +60,14 @@ export default function AdminLoginPage() {
           )}
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-300">Admin Username</label>
+            <label className="text-xs font-semibold text-gray-300">Admin Email / Username</label>
             <div className="relative">
-              <User className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
+              <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
               <input
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="admin"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                placeholder="admin@kiosk.com or admin"
                 className="w-full h-11 rounded-xl bg-white/5 border border-white/10 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500"
                 required
               />
@@ -107,7 +107,7 @@ export default function AdminLoginPage() {
 
         <div className="text-center border-t border-white/10 pt-4">
           <p className="text-[11px] text-gray-500">
-            Protected Area — Authorized Admin Access Only
+            Powered by Supabase Auth — Protected Admin System
           </p>
         </div>
       </div>
