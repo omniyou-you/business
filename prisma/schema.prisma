@@ -1,0 +1,37 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model PrintJob {
+  order_id                 String    @id
+  print_code               String    @unique
+  pdf_file_id              String
+  file_name                String
+  file_storage_location    String
+  page_count               Int
+  copies                   Int       @default(1)
+  paper_size               String    @default("A4")
+  color_or_black_white     String    @default("bw") // "color" | "bw"
+  single_or_double_sided   String    @default("single") // "single" | "double"
+  orientation              String    @default("portrait") // "portrait" | "landscape"
+  scaling                  String    @default("fit_to_page")
+  selected_printer_options String?   @default("{}") // JSON string for future expansion
+  calculated_price         Float
+  payment_status           String    @default("PENDING") // PENDING | VERIFIED | FAILED
+  payment_method           String    @default("TEST_SIMULATED")
+  payment_transaction_id   String?
+  print_status             String    @default("PENDING") // PENDING | AUTHORIZED | PRINTING | COMPLETED | DENIED | EXPIRED
+  created_at               DateTime  @default(now())
+  paid_at                  DateTime?
+  expires_at               DateTime
+  machine_id               String?
+  printed_at               DateTime?
+
+  @@index([print_code])
+}
