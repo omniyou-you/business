@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { 
   DollarSign, FileCheck, Layers, Clock, Search, RefreshCw, 
-  Copy, FileText, ExternalLink, X, Eye, TrendingUp, CheckCircle2, AlertCircle, QrCode
+  Copy, FileText, ExternalLink, X, Eye, TrendingUp, CheckCircle2, QrCode
 } from "lucide-react";
 
 interface PrintJobRecord {
@@ -84,110 +84,110 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Top Banner Overview */}
-      <div className="glass-panel p-6 rounded-3xl relative overflow-hidden border border-blue-500/20">
-        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl relative overflow-hidden backdrop-blur-sm">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[11px] font-bold mb-2">
-              <TrendingUp className="w-3.5 h-3.5" />
-              SYSTEM PERFORMANCE OPTIMAL
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[11px] font-mono font-medium mb-2">
+              <TrendingUp className="w-3 h-3" />
+              Network Healthy
             </div>
-            <h2 className="text-2xl font-extrabold text-white tracking-tight">Printing Network Overview</h2>
-            <p className="text-xs text-gray-400 mt-1">Real-time statistics, revenue tracking, and order verification history.</p>
+            <h2 className="text-xl font-bold text-white tracking-tight">Printing Network Overview</h2>
+            <p className="text-xs text-zinc-400 mt-0.5">Real-time statistics, revenue tracking, and order verification history.</p>
           </div>
 
           <button
             onClick={fetchDashboardData}
             disabled={loading}
-            className="px-4 py-2.5 rounded-2xl glow-button text-white font-bold text-xs flex items-center gap-2 active:scale-95 transition-all"
+            className="px-3.5 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white font-medium text-xs flex items-center gap-2 border border-zinc-700/60 active:scale-95 transition-all"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-            Refresh Statistics
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+            Refresh
           </button>
         </div>
       </div>
 
-      {/* 4 Professional Metric Cards */}
+      {/* 4 Card Panel Metrics - Clean 1px border-zinc-800 */}
       {stats && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {/* Card 1: Total Revenue */}
-          <div className="glass-panel p-5 rounded-3xl space-y-3 relative overflow-hidden border-t-2 border-t-emerald-500">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Gross Sales Revenue */}
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Gross Sales Revenue</span>
-              <div className="w-9 h-9 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
-                <DollarSign className="w-5 h-5" />
+              <span className="text-xs font-medium text-zinc-400">Gross Sales Revenue</span>
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 text-emerald-400 flex items-center justify-center border border-zinc-700/50">
+                <DollarSign className="w-4 h-4" />
               </div>
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-white tracking-tight">${stats.totalRevenue.toFixed(2)}</span>
-              <span className="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">+100% Paid</span>
+            <div className="flex items-baseline gap-2 pt-1">
+              <span className="text-3xl font-bold tracking-tight text-white">${stats.totalRevenue.toFixed(2)}</span>
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">+100% Paid</span>
             </div>
-            <p className="text-[11px] text-gray-400">Total processed print transactions</p>
+            <p className="text-xs text-zinc-400 pt-1">Total processed print transactions</p>
           </div>
 
-          {/* Card 2: Total Orders */}
-          <div className="glass-panel p-5 rounded-3xl space-y-3 relative overflow-hidden border-t-2 border-t-blue-500">
+          {/* Total Print Orders */}
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Print Orders</span>
-              <div className="w-9 h-9 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20">
-                <Layers className="w-5 h-5" />
+              <span className="text-xs font-medium text-zinc-400">Total Print Orders</span>
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 text-blue-400 flex items-center justify-center border border-zinc-700/50">
+                <Layers className="w-4 h-4" />
               </div>
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-white tracking-tight">{stats.totalOrders}</span>
-              <span className="text-[11px] font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full">All Time</span>
+            <div className="flex items-baseline gap-2 pt-1">
+              <span className="text-3xl font-bold tracking-tight text-white">{stats.totalOrders}</span>
+              <span className="text-[10px] font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">All Time</span>
             </div>
-            <p className="text-[11px] text-gray-400">Total uploaded PDF documents</p>
+            <p className="text-xs text-zinc-400 pt-1">Total uploaded PDF documents</p>
           </div>
 
-          {/* Card 3: Active Paid Codes */}
-          <div className="glass-panel p-5 rounded-3xl space-y-3 relative overflow-hidden border-t-2 border-t-amber-500">
+          {/* Active Paid Codes */}
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Active Paid Codes</span>
-              <div className="w-9 h-9 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
-                <Clock className="w-5 h-5" />
+              <span className="text-xs font-medium text-zinc-400">Active Paid Codes</span>
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 text-amber-400 flex items-center justify-center border border-zinc-700/50">
+                <Clock className="w-4 h-4" />
               </div>
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-white tracking-tight">{stats.activeJobs}</span>
-              <span className="text-[11px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">Kiosk Ready</span>
+            <div className="flex items-baseline gap-2 pt-1">
+              <span className="text-3xl font-bold tracking-tight text-white">{stats.activeJobs}</span>
+              <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">Kiosk Ready</span>
             </div>
-            <p className="text-[11px] text-gray-400">Unclaimed codes ready for print release</p>
+            <p className="text-xs text-zinc-400 pt-1">Unclaimed codes ready for print release</p>
           </div>
 
-          {/* Card 4: Completed Jobs */}
-          <div className="glass-panel p-5 rounded-3xl space-y-3 relative overflow-hidden border-t-2 border-t-indigo-500">
+          {/* Completed Prints */}
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Completed Prints</span>
-              <div className="w-9 h-9 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center border border-indigo-500/20">
-                <FileCheck className="w-5 h-5" />
+              <span className="text-xs font-medium text-zinc-400">Completed Prints</span>
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 text-indigo-400 flex items-center justify-center border border-zinc-700/50">
+                <FileCheck className="w-4 h-4" />
               </div>
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-white tracking-tight">{stats.completedJobs}</span>
-              <span className="text-[11px] font-semibold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full">Purged R2</span>
+            <div className="flex items-baseline gap-2 pt-1">
+              <span className="text-3xl font-bold tracking-tight text-white">{stats.completedJobs}</span>
+              <span className="text-[10px] font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full border border-indigo-500/20">Purged R2</span>
             </div>
-            <p className="text-[11px] text-gray-400">Successfully printed & purged documents</p>
+            <p className="text-xs text-zinc-400 pt-1">Printed & purged documents</p>
           </div>
         </div>
       )}
 
-      {/* Orders Filter & Search Control */}
-      <div className="glass-panel p-5 sm:p-6 rounded-3xl space-y-5">
-        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 border-b border-white/10 pb-4">
+      {/* Database Order Registry Panel */}
+      <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-5 backdrop-blur-sm">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 border-b border-zinc-800/60 pb-4">
           <div>
-            <h3 className="text-lg font-bold text-white">Database Order Registry</h3>
-            <p className="text-xs text-gray-400">Search and manage print records across PostgreSQL database.</p>
+            <h3 className="text-base font-bold text-white tracking-tight">Database Order Registry</h3>
+            <p className="text-xs text-zinc-400">Search and manage print records across PostgreSQL database.</p>
           </div>
 
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
             {["ALL", "VERIFIED", "COMPLETED", "PENDING"].map((st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${
                   statusFilter === st
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/20 border border-blue-400/30"
-                    : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
+                    ? "bg-zinc-800 text-white font-semibold border border-zinc-700"
+                    : "text-zinc-400 hover:text-white hover:bg-zinc-900"
                 }`}
               >
                 {st}
@@ -196,109 +196,107 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Search Bar */}
+        {/* Minimal Search Bar */}
         <div className="relative">
-          <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
+          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-3" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by Order ID (e.g. ORD-2026-873062), 6-Digit Code (e.g. 661388), or File Name..."
-            className="w-full h-11 rounded-2xl bg-white/5 border border-white/10 pl-10 pr-4 text-xs sm:text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+            placeholder="Search by Order ID, 6-Digit Code, or File Name..."
+            className="w-full h-10 rounded-lg bg-zinc-950/80 border border-zinc-800 pl-10 pr-4 text-xs text-zinc-200 focus:outline-none focus:border-zinc-700 transition-colors"
           />
         </div>
 
-        {/* Professional Orders Table */}
-        <div className="overflow-x-auto rounded-2xl border border-white/10 glass-card">
-          <table className="w-full text-left text-xs text-gray-300">
-            <thead className="bg-white/5 uppercase font-bold text-[11px] text-gray-400 border-b border-white/10 tracking-wider">
+        {/* Clean Table Layout with Razor-Thin Bottom Borders */}
+        <div className="overflow-x-auto rounded-lg border border-zinc-800/80 bg-zinc-950/40">
+          <table className="w-full text-left text-xs text-zinc-300">
+            <thead className="bg-zinc-900/60 font-semibold text-[11px] text-zinc-400 border-b border-zinc-800">
               <tr>
-                <th className="p-4">Order ID</th>
-                <th className="p-4">Print Code</th>
-                <th className="p-4">File Document</th>
-                <th className="p-4">Pages/Copies</th>
-                <th className="p-4">Specs</th>
-                <th className="p-4">Price</th>
-                <th className="p-4">Payment</th>
-                <th className="p-4">Print Status</th>
-                <th className="p-4 text-center">Actions</th>
+                <th className="px-6 py-3.5">Order ID</th>
+                <th className="px-6 py-3.5">Print Code</th>
+                <th className="px-6 py-3.5">Document File</th>
+                <th className="px-6 py-3.5">Pages & Copies</th>
+                <th className="px-6 py-3.5">Specs</th>
+                <th className="px-6 py-3.5">Price</th>
+                <th className="px-6 py-3.5">Payment</th>
+                <th className="px-6 py-3.5">Print Status</th>
+                <th className="px-6 py-3.5 text-center">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-zinc-800/50">
               {filteredOrders.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="text-center p-12 text-gray-500">
+                  <td colSpan={9} className="text-center py-12 text-zinc-500">
                     No print jobs match the selected filter.
                   </td>
                 </tr>
               ) : (
                 filteredOrders.map((order) => (
-                  <tr key={order.order_id} className="hover:bg-blue-500/5 transition-colors group">
-                    <td className="p-4 font-mono font-bold text-white whitespace-nowrap">
+                  <tr key={order.order_id} className="border-b border-zinc-800/50 hover:bg-zinc-900/40 transition-colors">
+                    <td className="px-6 py-4 font-mono text-xs font-semibold text-white whitespace-nowrap">
                       {order.order_id}
                     </td>
-                    <td className="p-4 whitespace-nowrap">
-                      <div className="inline-flex items-center gap-1.5 bg-black/40 px-2.5 py-1 rounded-xl border border-white/10">
-                        <span className="font-mono font-extrabold text-blue-400 tracking-wider">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="inline-flex items-center gap-1.5 bg-zinc-900 px-2.5 py-1 rounded-lg border border-zinc-800">
+                        <span className="font-mono font-bold text-blue-400 tracking-wider text-xs">
                           {order.print_code}
                         </span>
                         <button
                           onClick={() => copyCode(order.print_code)}
                           title="Copy Code"
-                          className="text-gray-400 hover:text-white transition-colors"
+                          className="text-zinc-500 hover:text-white transition-colors"
                         >
-                          <Copy className="w-3.5 h-3.5" />
+                          <Copy className="w-3 h-3" />
                         </button>
                       </div>
                     </td>
-                    <td className="p-4 font-medium text-white max-w-[180px] truncate">
+                    <td className="px-6 py-4 font-medium text-white max-w-[180px] truncate">
                       <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center flex-shrink-0">
-                          <FileText className="w-3.5 h-3.5" />
-                        </div>
+                        <FileText className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
                         <span className="truncate">{order.file_name}</span>
                       </div>
                     </td>
-                    <td className="p-4 font-semibold text-white whitespace-nowrap">
+                    <td className="px-6 py-4 font-medium text-zinc-300 whitespace-nowrap">
                       {order.page_count} pg × {order.copies} copy
                     </td>
-                    <td className="p-4 whitespace-nowrap">
-                      <span className="bg-white/5 px-2.5 py-1 rounded-lg text-[11px] font-mono text-gray-300 border border-white/5">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="bg-zinc-900 px-2 py-0.5 rounded text-[10px] font-mono text-zinc-400 border border-zinc-800">
                         {order.paper_size} · {order.color_or_black_white === "color" ? "COLOR" : "B&W"} · {order.single_or_double_sided === "double" ? "DUPLEX" : "SINGLE"}
                       </span>
                     </td>
-                    <td className="p-4 font-extrabold text-emerald-400 whitespace-nowrap text-sm">
+                    <td className="px-6 py-4 font-bold text-emerald-400 whitespace-nowrap">
                       ${order.calculated_price.toFixed(2)}
                     </td>
-                    <td className="p-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
                           order.payment_status === "VERIFIED"
-                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                            : "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                            : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
                         }`}
                       >
-                        <span className={`w-1.5 h-1.5 rounded-full ${order.payment_status === 'VERIFIED' ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
+                        <span className={`w-1 h-1 rounded-full ${order.payment_status === 'VERIFIED' ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
                         {order.payment_status}
                       </span>
                     </td>
-                    <td className="p-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
                           order.print_status === "COMPLETED" || order.print_status === "PRINTED"
-                            ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/30"
+                            ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
                             : order.print_status === "AUTHORIZED"
-                            ? "bg-blue-500/10 text-blue-400 border border-blue-500/30"
-                            : "bg-gray-800 text-gray-400"
+                            ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                            : "bg-zinc-800 text-zinc-400"
                         }`}
                       >
                         {order.print_status}
                       </span>
                     </td>
-                    <td className="p-4 whitespace-nowrap text-center">
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
                       <button
                         onClick={() => setSelectedOrder(order)}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-blue-600 hover:text-white text-gray-300 font-semibold text-[11px] transition-all border border-white/10"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-[11px] transition-colors border border-zinc-800"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         Inspect
@@ -312,52 +310,52 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* INTERACTIVE ORDER INSPECTION MODAL */}
+      {/* SLEEK DARK ZINC ORDER INSPECTOR MODAL */}
       {selectedOrder && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="glass-panel p-6 sm:p-8 rounded-3xl max-w-lg w-full space-y-6 border border-blue-500/40 relative animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-zinc-950 border border-zinc-800 p-6 rounded-2xl max-w-lg w-full space-y-5 relative shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <button
               onClick={() => setSelectedOrder(null)}
-              className="absolute top-5 right-5 text-gray-400 hover:text-white p-1 rounded-xl hover:bg-white/10 transition-colors"
+              className="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-zinc-900 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
 
-            <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="w-10 h-10 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
-                <FileText className="w-5 h-5" />
+            <div className="flex items-center gap-3 border-b border-zinc-800 pb-4">
+              <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 flex items-center justify-center font-bold">
+                <FileText className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-extrabold text-lg text-white">Order Details</h3>
-                <p className="text-xs text-gray-400">PostgreSQL ID: {selectedOrder.order_id}</p>
+                <h3 className="font-bold text-sm text-white">Order Details</h3>
+                <p className="text-[11px] text-zinc-500 font-mono">ID: {selectedOrder.order_id}</p>
               </div>
             </div>
 
             <div className="space-y-4 text-xs">
-              {/* Print Code Card */}
-              <div className="glass-card p-4 rounded-2xl text-center space-y-2 border border-blue-500/30">
-                <span className="text-[11px] font-semibold text-gray-400 uppercase">Kiosk Verification Code</span>
-                <div className="text-4xl font-extrabold text-blue-400 code-badge tracking-widest font-mono">
+              {/* Print Code Box */}
+              <div className="bg-zinc-900/60 border border-zinc-800 p-4 rounded-xl text-center space-y-1">
+                <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">Verification Code</span>
+                <div className="text-3xl font-bold text-blue-400 font-mono tracking-widest">
                   {selectedOrder.print_code}
                 </div>
               </div>
 
-              {/* Specs Breakdown Grid */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="glass-card p-3 rounded-xl">
-                  <p className="text-[10px] text-gray-400">File Name</p>
+              {/* Specs Grid */}
+              <div className="grid grid-cols-2 gap-2.5">
+                <div className="bg-zinc-900/40 border border-zinc-800/60 p-3 rounded-lg">
+                  <p className="text-[10px] text-zinc-500">File Document</p>
                   <p className="font-semibold text-white truncate" title={selectedOrder.file_name}>{selectedOrder.file_name}</p>
                 </div>
-                <div className="glass-card p-3 rounded-xl">
-                  <p className="text-[10px] text-gray-400">Pages & Copies</p>
+                <div className="bg-zinc-900/40 border border-zinc-800/60 p-3 rounded-lg">
+                  <p className="text-[10px] text-zinc-500">Pages & Copies</p>
                   <p className="font-semibold text-white">{selectedOrder.page_count} pg × {selectedOrder.copies} copies</p>
                 </div>
-                <div className="glass-card p-3 rounded-xl">
-                  <p className="text-[10px] text-gray-400">Paper Format</p>
+                <div className="bg-zinc-900/40 border border-zinc-800/60 p-3 rounded-lg">
+                  <p className="text-[10px] text-zinc-500">Paper Format</p>
                   <p className="font-semibold text-white">{selectedOrder.paper_size}</p>
                 </div>
-                <div className="glass-card p-3 rounded-xl">
-                  <p className="text-[10px] text-gray-400">Color & Sidedness</p>
+                <div className="bg-zinc-900/40 border border-zinc-800/60 p-3 rounded-lg">
+                  <p className="text-[10px] text-zinc-500">Color & Sidedness</p>
                   <p className="font-semibold text-white">
                     {selectedOrder.color_or_black_white.toUpperCase()} · {selectedOrder.single_or_double_sided.toUpperCase()}
                   </p>
@@ -365,13 +363,13 @@ export default function AdminDashboardPage() {
               </div>
 
               {/* Price & Storage Location */}
-              <div className="glass-card p-4 rounded-2xl space-y-2">
+              <div className="bg-zinc-900/40 border border-zinc-800/60 p-3.5 rounded-xl space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Total Paid Price:</span>
-                  <span className="font-extrabold text-emerald-400 text-base">${selectedOrder.calculated_price.toFixed(2)}</span>
+                  <span className="text-zinc-400">Total Price:</span>
+                  <span className="font-bold text-emerald-400 text-base">${selectedOrder.calculated_price.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-gray-400">Cloudflare R2 Link:</span>
+                  <span className="text-zinc-400">Cloudflare R2 Link:</span>
                   {selectedOrder.file_storage_location.startsWith("http") ? (
                     <a
                       href={selectedOrder.file_storage_location}
@@ -380,16 +378,16 @@ export default function AdminDashboardPage() {
                       className="text-blue-400 hover:underline flex items-center gap-1 font-mono font-medium truncate max-w-[200px]"
                     >
                       <ExternalLink className="w-3 h-3 flex-shrink-0" />
-                      View R2 File
+                      View File
                     </a>
                   ) : (
-                    <span className="text-gray-400 font-mono">Local Disk</span>
+                    <span className="text-zinc-500 font-mono">Local Storage</span>
                   )}
                 </div>
               </div>
 
-              <div className="text-[11px] text-gray-400 text-center pt-2">
-                Created At: {new Date(selectedOrder.created_at).toLocaleString()}
+              <div className="text-[10px] text-zinc-500 text-center font-mono pt-1">
+                Created: {new Date(selectedOrder.created_at).toLocaleString()}
               </div>
             </div>
           </div>
