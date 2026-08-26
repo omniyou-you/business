@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { generatePrintCode } from "@/lib/code-generator";
-import { savePDFToStorage } from "@/lib/storage";
+import { savePDFToStorage, deletePDFFromStorage } from "@/lib/storage";
 import QRCode from "qrcode";
 import fs from "fs";
 
@@ -38,12 +38,33 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 2. Save PDF file to Cloudflare R2 named as [filename]_[code].pdf & get Public URL
+    // 2. Fetch PDF buffer and re-save to Cloudflare R2 named as [filename]_[code].pdf
     let publicFileLocation = existingJob.file_storage_location;
-    if (fs.existsSync(existingJob.file_storage_location)) {
-      const fileBuffer = fs.readFileSync(existingJob.file_storage_location);
+    let fileBuffer: Buffer | null = null;
+
+    if (existingJob.file_storage_location.startsWith("http")) {
+      console.log(`[PaySimulate] Fetching temporary R2 PDF from ${existingJob.file_storage_location}`);
+      const fetchRes = await fetch(existingJob.file_storage_location);
+      if (fetchRes.ok) {
+        const arrayBuf = await fetchRes.arrayBuffer();
+        fileBuffer = Buffer.from(arrayBuf);
+      }
+    } else if (fs.existsSync(existingJob.file_storage_location)) {
+      fileBuffer = fs.readFileSync(existingJob.file_storage_location);
+    }
+
+    if (fileBuffer) {
+      const oldStorageLocation = existingJob.file_storage_location;
+
+      // Save new object named [filename]_[code].pdf
       const storageResult = await savePDFToStorage(existingJob.file_name, fileBuffer, finalPrintCode);
       publicFileLocation = storageResult.storageLocation;
+
+      // Delete temporary file from R2 / disk if location changed
+      if (oldStorageLocation !== publicFileLocation) {
+        console.log(`[PaySimulate] Purging temporary upload file: ${oldStorageLocation}`);
+        await deletePDFFromStorage(oldStorageLocation);
+      }
     }
 
     // 3. Generate QR Code Data URL
@@ -59,7 +80,7 @@ export async function POST(req: NextRequest) {
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours validity
 
-    // 4. Update database record with verified status & public Cloudflare R2 URL
+    // 4. Update PostgreSQL with verified status & final Cloudflare R2 URL ending in _[code].pdf
     const updatedJob = await db.printJob.update({
       where: { order_id },
       data: {
