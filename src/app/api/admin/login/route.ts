@@ -6,10 +6,13 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { username, password } = body;
 
-    const envUser = process.env.ADMIN_USERNAME || "admin";
-    const envPass = process.env.ADMIN_PASSWORD || "AdminSecret2026!";
+    const envUser = (process.env.ADMIN_USERNAME || "admin").trim().replace(/^["']|["']$/g, '');
+    const envPass = (process.env.ADMIN_PASSWORD || "AdminSecret2026!").trim().replace(/^["']|["']$/g, '');
 
-    if (username !== envUser || password !== envPass) {
+    const inputUser = (username || "").trim();
+    const inputPass = (password || "").trim();
+
+    if (inputUser !== envUser || inputPass !== envPass) {
       return NextResponse.json(
         { error: "Invalid admin username or password" },
         { status: 401 }
@@ -17,7 +20,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Set secure HTTP-only cookie
-    setAdminCookie(username);
+    setAdminCookie(inputUser);
 
     return NextResponse.json({
       success: true,
