@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { 
   LayoutDashboard, FileText, Cpu, BarChart3, Settings, 
-  LogOut, Menu, X, ShieldCheck, User, Bell
+  LogOut, Menu, X, User, Bell
 } from "lucide-react";
 
 export default function AdminLayout({
@@ -24,10 +24,10 @@ export default function AdminLayout({
 
   const navItems = [
     { label: "Overview", href: "/admin/dashboard", icon: LayoutDashboard },
-    { label: "Print Jobs", href: "/admin/dashboard?tab=orders", icon: FileText },
-    { label: "Kiosk Network", href: "/admin/dashboard?tab=kiosks", icon: Cpu },
-    { label: "Analytics", href: "/admin/dashboard?tab=analytics", icon: BarChart3 },
-    { label: "Settings", href: "/admin/dashboard?tab=settings", icon: Settings },
+    { label: "Print Jobs", href: "/admin/orders", icon: FileText },
+    { label: "Kiosk Network", href: "/admin/kiosks", icon: Cpu },
+    { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+    { label: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
   const handleLogout = async () => {
@@ -56,7 +56,7 @@ export default function AdminLayout({
           <nav className="space-y-0.5">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const active = pathname === item.href || (pathname === "/admin/dashboard" && item.href === "/admin/dashboard");
+              const active = pathname === item.href;
               return (
                 <Link
                   key={item.label}
@@ -181,7 +181,7 @@ export default function AdminLayout({
           </div>
         </header>
 
-        {/* Page Content Container with Clean Padding */}
+        {/* Page Content Container */}
         <main className="p-4 sm:p-8 flex-1 max-w-7xl w-full mx-auto space-y-6">
           {children}
         </main>
