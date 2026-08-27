@@ -35,3 +35,19 @@ model PrintJob {
 
   @@index([print_code])
 }
+
+model KioskMachine {
+  id          String   @id @default(uuid())
+  machine_id  String   @unique
+  location    String
+  api_key     String   @unique
+  status      String   @default("ONLINE") // ONLINE | MAINTENANCE | REVOKED
+  last_ping   DateTime @default(now())
+  created_at  DateTime @default(now())
+}
+
+model SystemSetting {
+  key         String   @id
+  value       String
+  updated_at  DateTime @default(now()) @updatedAt
+}

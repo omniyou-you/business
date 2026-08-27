@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { 
-  Search, RefreshCw, Copy, FileText, ExternalLink, X, Eye
+  Search, RefreshCw, Copy, FileText, ExternalLink, X, Eye, Check
 } from "lucide-react";
 
 interface PrintJobRecord {
@@ -58,17 +58,35 @@ export default function AdminOrdersPage() {
     setTimeout(() => setCopiedCode(null), 2000);
   };
 
+  // REAL DATABASE FILTERING LOGIC
   const filteredOrders = orders.filter((order) => {
+    const query = search.trim().toLowerCase();
     const matchesSearch =
-      order.order_id.toLowerCase().includes(search.toLowerCase()) ||
-      order.print_code.toLowerCase().includes(search.toLowerCase()) ||
-      order.file_name.toLowerCase().includes(search.toLowerCase());
+      !query ||
+      order.order_id.toLowerCase().includes(query) ||
+      order.print_code.toLowerCase().includes(query) ||
+      order.file_name.toLowerCase().includes(query);
 
-    if (statusFilter === "ALL") return matchesSearch;
-    if (statusFilter === "VERIFIED") return matchesSearch && order.payment_status === "VERIFIED";
-    if (statusFilter === "COMPLETED") return matchesSearch && (order.print_status === "COMPLETED" || order.print_status === "PRINTED");
-    if (statusFilter === "PENDING") return matchesSearch && order.payment_status === "PENDING";
-    return matchesSearch;
+    if (!matchesSearch) return false;
+
+    const payStatus = (order.payment_status || "").toUpperCase();
+    const printStatus = (order.print_status || "").toUpperCase();
+
+    if (statusFilter === "ALL") return true;
+
+    if (statusFilter === "VERIFIED") {
+      return payStatus === "VERIFIED";
+    }
+
+    if (statusFilter === "COMPLETED") {
+      return printStatus === "COMPLETED" || printStatus === "PRINTED";
+    }
+
+    if (statusFilter === "PENDING") {
+      return payStatus === "PENDING" || printStatus === "PENDING";
+    }
+
+    return true;
   });
 
   return (
@@ -77,7 +95,7 @@ export default function AdminOrdersPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-bold text-white tracking-tight">Print Jobs Registry</h2>
-          <p className="text-xs text-zinc-400">Search and manage print records across Supabase PostgreSQL database.</p>
+          <p className="text-xs text-zinc-400">Live database records from Supabase PostgreSQL ({orders.length} total jobs).</p>
         </div>
 
         <button
@@ -86,7 +104,7 @@ export default function AdminOrdersPage() {
           className="px-3.5 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white font-medium text-xs flex items-center gap-2 border border-zinc-700/60 active:scale-95 transition-all"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-          Refresh Orders
+          Refresh Database
         </button>
       </div>
 
@@ -141,7 +159,7 @@ export default function AdminOrdersPage() {
               {filteredOrders.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="text-center py-12 text-zinc-500">
-                    No print jobs match the selected filter.
+                    {loading ? "Loading database records..." : `No orders found under filter: "${statusFilter}"`}
                   </td>
                 </tr>
               ) : (
@@ -160,7 +178,11 @@ export default function AdminOrdersPage() {
                           title="Copy Code"
                           className="text-zinc-500 hover:text-white transition-colors"
                         >
-                          <Copy className="w-3 h-3" />
+                          {copiedCode === order.print_code ? (
+                            <Check className="w-3 h-3 text-emerald-400" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
                         </button>
                       </div>
                     </td>
