@@ -84,7 +84,7 @@ export default function AdminAnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header - Always 100% Visible on Frame 1 */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-bold text-white tracking-tight">Revenue & Paper Format Analytics</h2>
@@ -101,34 +101,46 @@ export default function AdminAnalyticsPage() {
         </button>
       </div>
 
-      {/* Top 3 Real Summary Cards */}
+      {/* Top 3 Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-400">Average Order Value (AOV)</span>
-            <DollarSign className="w-4 h-4 text-emerald-400" />
-          </div>
-          <div className="text-3xl font-bold text-white font-mono">${avgOrderValue.toFixed(2)}</div>
-          <p className="text-[11px] text-emerald-400 font-mono">Live PostgreSQL database average</p>
-        </div>
+        {loading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-3 animate-pulse">
+              <div className="flex justify-between items-center"><div className="h-3.5 w-32 bg-zinc-800 rounded" /><div className="w-4 h-4 bg-zinc-800 rounded" /></div>
+              <div className="h-8 w-24 bg-zinc-700/80 rounded-md" />
+              <div className="h-3 w-36 bg-zinc-800/60 rounded" />
+            </div>
+          ))
+        ) : (
+          <>
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-zinc-400">Average Order Value (AOV)</span>
+                <DollarSign className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div className="text-3xl font-bold text-white font-mono">${avgOrderValue.toFixed(2)}</div>
+              <p className="text-[11px] text-emerald-400 font-mono">Live PostgreSQL database average</p>
+            </div>
 
-        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-400">Total Print Orders</span>
-            <Layers className="w-4 h-4 text-blue-400" />
-          </div>
-          <div className="text-3xl font-bold text-white font-mono">{totalOrders} Orders</div>
-          <p className="text-[11px] text-zinc-400">Aggregated database total</p>
-        </div>
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-zinc-400">Total Print Orders</span>
+                <Layers className="w-4 h-4 text-blue-400" />
+              </div>
+              <div className="text-3xl font-bold text-white font-mono">{totalOrders} Orders</div>
+              <p className="text-[11px] text-zinc-400">Aggregated database total</p>
+            </div>
 
-        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-400">Total Net Sales Revenue</span>
-            <TrendingUp className="w-4 h-4 text-purple-400" />
-          </div>
-          <div className="text-3xl font-bold text-emerald-400 font-mono">${totalRevenue.toFixed(2)}</div>
-          <p className="text-[11px] text-purple-400 font-mono">100% verified payments</p>
-        </div>
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-zinc-400">Total Net Sales Revenue</span>
+                <TrendingUp className="w-4 h-4 text-purple-400" />
+              </div>
+              <div className="text-3xl font-bold text-emerald-400 font-mono">${totalRevenue.toFixed(2)}</div>
+              <p className="text-[11px] text-purple-400 font-mono">100% verified payments</p>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Analytics Breakdown Grid */}
@@ -143,7 +155,11 @@ export default function AdminAnalyticsPage() {
           </div>
 
           <div className="space-y-3">
-            {paperSizesList.length === 0 ? (
+            {loading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="space-y-1 animate-pulse"><div className="h-4 bg-zinc-800/60 rounded" /><div className="h-2 bg-zinc-800/40 rounded" /></div>
+              ))
+            ) : paperSizesList.length === 0 ? (
               <p className="text-xs text-zinc-500 py-4 text-center">No paper format records in database.</p>
             ) : (
               paperSizesList.map((item) => (
@@ -174,20 +190,26 @@ export default function AdminAnalyticsPage() {
           </div>
 
           <div className="space-y-3">
-            {colorProfileList.map((item) => (
-              <div key={item.mode} className="space-y-1">
-                <div className="flex justify-between text-xs font-medium">
-                  <span className="text-zinc-200">{item.mode}</span>
-                  <span className="text-zinc-400 font-mono">{item.count} jobs ({item.percentage}%)</span>
+            {loading ? (
+              Array.from({ length: 2 }).map((_, i) => (
+                <div key={i} className="space-y-1 animate-pulse"><div className="h-4 bg-zinc-800/60 rounded" /><div className="h-2 bg-zinc-800/40 rounded" /></div>
+              ))
+            ) : (
+              colorProfileList.map((item) => (
+                <div key={item.mode} className="space-y-1">
+                  <div className="flex justify-between text-xs font-medium">
+                    <span className="text-zinc-200">{item.mode}</span>
+                    <span className="text-zinc-400 font-mono">{item.count} jobs ({item.percentage}%)</span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-zinc-800 overflow-hidden">
+                    <div 
+                      className={`h-full rounded-full transition-all ${item.mode.includes("Color") ? 'bg-emerald-400' : 'bg-zinc-400'}`}
+                      style={{ width: `${item.percentage}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="w-full h-2 rounded-full bg-zinc-800 overflow-hidden">
-                  <div 
-                    className={`h-full rounded-full transition-all ${item.mode.includes("Color") ? 'bg-emerald-400' : 'bg-zinc-400'}`}
-                    style={{ width: `${item.percentage}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
@@ -201,20 +223,26 @@ export default function AdminAnalyticsPage() {
           </div>
 
           <div className="space-y-3">
-            {duplexRatioList.map((item) => (
-              <div key={item.type} className="space-y-1">
-                <div className="flex justify-between text-xs font-medium">
-                  <span className="text-zinc-200">{item.type}</span>
-                  <span className="text-zinc-400 font-mono">{item.count} jobs ({item.percentage}%)</span>
+            {loading ? (
+              Array.from({ length: 2 }).map((_, i) => (
+                <div key={i} className="space-y-1 animate-pulse"><div className="h-4 bg-zinc-800/60 rounded" /><div className="h-2 bg-zinc-800/40 rounded" /></div>
+              ))
+            ) : (
+              duplexRatioList.map((item) => (
+                <div key={item.type} className="space-y-1">
+                  <div className="flex justify-between text-xs font-medium">
+                    <span className="text-zinc-200">{item.type}</span>
+                    <span className="text-zinc-400 font-mono">{item.count} jobs ({item.percentage}%)</span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-zinc-800 overflow-hidden">
+                    <div 
+                      className="h-full bg-purple-500 rounded-full transition-all"
+                      style={{ width: `${item.percentage}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="w-full h-2 rounded-full bg-zinc-800 overflow-hidden">
-                  <div 
-                    className="h-full bg-purple-500 rounded-full transition-all"
-                    style={{ width: `${item.percentage}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

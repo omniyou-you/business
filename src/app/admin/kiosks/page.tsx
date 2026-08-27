@@ -97,7 +97,7 @@ export default function AdminKiosksPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header Bar */}
+      {/* Header Bar - Always 100% Visible on Frame 1 */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-bold text-white tracking-tight">Kiosk Network Manager</h2>
@@ -144,10 +144,21 @@ export default function AdminKiosksPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/50">
-              {nodes.length === 0 ? (
+              {loading ? (
+                // Frame 1 Skeleton Rows
+                Array.from({ length: 3 }).map((_, i) => (
+                  <tr key={i} className="border-b border-zinc-800/50 animate-pulse">
+                    <td className="px-6 py-4"><div className="h-4 w-32 bg-zinc-800 rounded" /></td>
+                    <td className="px-6 py-4"><div className="h-4 w-40 bg-zinc-800 rounded" /></td>
+                    <td className="px-6 py-4"><div className="h-6 w-36 bg-zinc-800 rounded-lg" /></td>
+                    <td className="px-6 py-4"><div className="h-5 w-20 bg-zinc-800/60 rounded-full" /></td>
+                    <td className="px-6 py-4 text-center"><div className="h-6 w-24 bg-zinc-800 mx-auto rounded-lg" /></td>
+                  </tr>
+                ))
+              ) : nodes.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="text-center py-12 text-zinc-500">
-                    {loading ? "Loading database records..." : "No kiosk nodes registered yet in database. Click 'Register New Kiosk Node' above to add one!"}
+                    No kiosk nodes registered yet in database. Click 'Register New Kiosk Node' above to add one!
                   </td>
                 </tr>
               ) : (

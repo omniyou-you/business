@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
   DollarSign, FileCheck, Layers, Clock, RefreshCw, 
-  TrendingUp, ArrowRight, ShieldCheck, Cpu, Settings, FileText
+  TrendingUp, ArrowRight, Cpu, Settings, FileText
 } from "lucide-react";
 
 interface AdminStats {
@@ -38,7 +38,7 @@ export default function AdminOverviewPage() {
 
   return (
     <div className="space-y-6">
-      {/* Top Banner Overview */}
+      {/* Top Banner Overview - Always 100% Visible on Frame 1 */}
       <div className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-xl relative overflow-hidden backdrop-blur-sm">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
@@ -61,74 +61,88 @@ export default function AdminOverviewPage() {
         </div>
       </div>
 
-      {/* 4 KPI Metric Cards */}
-      {stats && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Gross Sales Revenue */}
-          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-zinc-400">Gross Sales Revenue</span>
-              <div className="w-7 h-7 rounded-lg bg-zinc-800 text-emerald-400 flex items-center justify-center border border-zinc-700/50">
-                <DollarSign className="w-4 h-4" />
+      {/* 4 KPI Metric Cards (Skeletons shown on Frame 1 when loading) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {loading || !stats ? (
+          // Frame 1 Skeleton Pulse Loaders (Zero Layout Shift)
+          Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-3 animate-pulse">
+              <div className="flex items-center justify-between">
+                <div className="h-3.5 w-28 bg-zinc-800 rounded" />
+                <div className="w-7 h-7 rounded-lg bg-zinc-800" />
               </div>
+              <div className="h-8 w-24 bg-zinc-700/80 rounded-md" />
+              <div className="h-3 w-32 bg-zinc-800/60 rounded" />
             </div>
-            <div className="flex items-baseline gap-2 pt-1">
-              <span className="text-3xl font-bold tracking-tight text-white">${stats.totalRevenue.toFixed(2)}</span>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">+100% Paid</span>
+          ))
+        ) : (
+          // Populated Data Cards
+          <>
+            {/* Gross Sales Revenue */}
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-zinc-400">Gross Sales Revenue</span>
+                <div className="w-7 h-7 rounded-lg bg-zinc-800 text-emerald-400 flex items-center justify-center border border-zinc-700/50">
+                  <DollarSign className="w-4 h-4" />
+                </div>
+              </div>
+              <div className="flex items-baseline gap-2 pt-1">
+                <span className="text-3xl font-bold tracking-tight text-white">${stats.totalRevenue.toFixed(2)}</span>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">+100% Paid</span>
+              </div>
+              <p className="text-xs text-zinc-400 pt-1">Total processed transactions</p>
             </div>
-            <p className="text-xs text-zinc-400 pt-1">Total processed transactions</p>
-          </div>
 
-          {/* Total Print Orders */}
-          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-zinc-400">Total Print Orders</span>
-              <div className="w-7 h-7 rounded-lg bg-zinc-800 text-blue-400 flex items-center justify-center border border-zinc-700/50">
-                <Layers className="w-4 h-4" />
+            {/* Total Print Orders */}
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-zinc-400">Total Print Orders</span>
+                <div className="w-7 h-7 rounded-lg bg-zinc-800 text-blue-400 flex items-center justify-center border border-zinc-700/50">
+                  <Layers className="w-4 h-4" />
+                </div>
               </div>
+              <div className="flex items-baseline gap-2 pt-1">
+                <span className="text-3xl font-bold tracking-tight text-white">{stats.totalOrders}</span>
+                <span className="text-[10px] font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">All Time</span>
+              </div>
+              <p className="text-xs text-zinc-400 pt-1">Total uploaded PDF documents</p>
             </div>
-            <div className="flex items-baseline gap-2 pt-1">
-              <span className="text-3xl font-bold tracking-tight text-white">{stats.totalOrders}</span>
-              <span className="text-[10px] font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">All Time</span>
-            </div>
-            <p className="text-xs text-zinc-400 pt-1">Total uploaded PDF documents</p>
-          </div>
 
-          {/* Active Paid Codes */}
-          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-zinc-400">Active Paid Codes</span>
-              <div className="w-7 h-7 rounded-lg bg-zinc-800 text-amber-400 flex items-center justify-center border border-zinc-700/50">
-                <Clock className="w-4 h-4" />
+            {/* Active Paid Codes */}
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-zinc-400">Active Paid Codes</span>
+                <div className="w-7 h-7 rounded-lg bg-zinc-800 text-amber-400 flex items-center justify-center border border-zinc-700/50">
+                  <Clock className="w-4 h-4" />
+                </div>
               </div>
+              <div className="flex items-baseline gap-2 pt-1">
+                <span className="text-3xl font-bold tracking-tight text-white">{stats.activeJobs}</span>
+                <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">Kiosk Ready</span>
+              </div>
+              <p className="text-xs text-zinc-400 pt-1">Unclaimed codes ready for print release</p>
             </div>
-            <div className="flex items-baseline gap-2 pt-1">
-              <span className="text-3xl font-bold tracking-tight text-white">{stats.activeJobs}</span>
-              <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">Kiosk Ready</span>
-            </div>
-            <p className="text-xs text-zinc-400 pt-1">Unclaimed codes ready for print release</p>
-          </div>
 
-          {/* Completed Prints */}
-          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-zinc-400">Completed Prints</span>
-              <div className="w-7 h-7 rounded-lg bg-zinc-800 text-indigo-400 flex items-center justify-center border border-zinc-700/50">
-                <FileCheck className="w-4 h-4" />
+            {/* Completed Prints */}
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 space-y-2 backdrop-blur-sm hover:border-zinc-700/80 transition-colors">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-zinc-400">Completed Prints</span>
+                <div className="w-7 h-7 rounded-lg bg-zinc-800 text-indigo-400 flex items-center justify-center border border-zinc-700/50">
+                  <FileCheck className="w-4 h-4" />
+                </div>
               </div>
+              <div className="flex items-baseline gap-2 pt-1">
+                <span className="text-3xl font-bold tracking-tight text-white">{stats.completedJobs}</span>
+                <span className="text-[10px] font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full border border-indigo-500/20">Purged R2</span>
+              </div>
+              <p className="text-xs text-zinc-400 pt-1">Printed & purged documents</p>
             </div>
-            <div className="flex items-baseline gap-2 pt-1">
-              <span className="text-3xl font-bold tracking-tight text-white">{stats.completedJobs}</span>
-              <span className="text-[10px] font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full border border-indigo-500/20">Purged R2</span>
-            </div>
-            <p className="text-xs text-zinc-400 pt-1">Printed & purged documents</p>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </div>
 
       {/* Quick Navigation Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Manage Print Jobs Link */}
         <Link 
           href="/admin/orders" 
           className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 hover:bg-zinc-900/70 transition-all group"
@@ -147,7 +161,6 @@ export default function AdminOverviewPage() {
           </div>
         </Link>
 
-        {/* Manage Kiosk Hardware Link */}
         <Link 
           href="/admin/kiosks" 
           className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 hover:bg-zinc-900/70 transition-all group"
@@ -166,7 +179,6 @@ export default function AdminOverviewPage() {
           </div>
         </Link>
 
-        {/* Revenue Analytics Link */}
         <Link 
           href="/admin/analytics" 
           className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 hover:bg-zinc-900/70 transition-all group"
@@ -185,7 +197,6 @@ export default function AdminOverviewPage() {
           </div>
         </Link>
 
-        {/* System Settings Link */}
         <Link 
           href="/admin/settings" 
           className="bg-zinc-900/40 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 hover:bg-zinc-900/70 transition-all group"

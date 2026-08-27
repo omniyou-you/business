@@ -58,7 +58,6 @@ export default function AdminOrdersPage() {
     setTimeout(() => setCopiedCode(null), 2000);
   };
 
-  // REAL DATABASE FILTERING LOGIC
   const filteredOrders = orders.filter((order) => {
     const query = search.trim().toLowerCase();
     const matchesSearch =
@@ -73,25 +72,16 @@ export default function AdminOrdersPage() {
     const printStatus = (order.print_status || "").toUpperCase();
 
     if (statusFilter === "ALL") return true;
-
-    if (statusFilter === "VERIFIED") {
-      return payStatus === "VERIFIED";
-    }
-
-    if (statusFilter === "COMPLETED") {
-      return printStatus === "COMPLETED" || printStatus === "PRINTED";
-    }
-
-    if (statusFilter === "PENDING") {
-      return payStatus === "PENDING" || printStatus === "PENDING";
-    }
+    if (statusFilter === "VERIFIED") return payStatus === "VERIFIED";
+    if (statusFilter === "COMPLETED") return printStatus === "COMPLETED" || printStatus === "PRINTED";
+    if (statusFilter === "PENDING") return payStatus === "PENDING" || printStatus === "PENDING";
 
     return true;
   });
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
+      {/* Page Header - Always 100% Visible on Frame 1 */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-bold text-white tracking-tight">Print Jobs Registry</h2>
@@ -139,7 +129,7 @@ export default function AdminOrdersPage() {
           </div>
         </div>
 
-        {/* Clean Table Layout */}
+        {/* Clean Table Layout with Skeleton Rows on Frame 1 */}
         <div className="overflow-x-auto rounded-lg border border-zinc-800/80 bg-zinc-950/40">
           <table className="w-full text-left text-xs text-zinc-300">
             <thead className="bg-zinc-900/60 font-semibold text-[11px] text-zinc-400 border-b border-zinc-800 uppercase tracking-wider">
@@ -156,10 +146,25 @@ export default function AdminOrdersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/50">
-              {filteredOrders.length === 0 ? (
+              {loading ? (
+                // Frame 1 Skeleton Pulse Rows (Zero Flash)
+                Array.from({ length: 5 }).map((_, rIdx) => (
+                  <tr key={rIdx} className="border-b border-zinc-800/50 animate-pulse">
+                    <td className="px-6 py-4"><div className="h-4 w-28 bg-zinc-800 rounded" /></td>
+                    <td className="px-6 py-4"><div className="h-6 w-20 bg-zinc-800 rounded-lg" /></td>
+                    <td className="px-6 py-4"><div className="h-4 w-32 bg-zinc-800 rounded" /></td>
+                    <td className="px-6 py-4"><div className="h-4 w-20 bg-zinc-800/60 rounded" /></td>
+                    <td className="px-6 py-4"><div className="h-5 w-28 bg-zinc-800/60 rounded" /></td>
+                    <td className="px-6 py-4"><div className="h-4 w-12 bg-zinc-800/80 rounded" /></td>
+                    <td className="px-6 py-4"><div className="h-5 w-16 bg-zinc-800/60 rounded-full" /></td>
+                    <td className="px-6 py-4"><div className="h-5 w-20 bg-zinc-800/60 rounded-full" /></td>
+                    <td className="px-6 py-4 text-center"><div className="h-6 w-16 bg-zinc-800 mx-auto rounded-lg" /></td>
+                  </tr>
+                ))
+              ) : filteredOrders.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="text-center py-12 text-zinc-500">
-                    {loading ? "Loading database records..." : `No orders found under filter: "${statusFilter}"`}
+                    No orders found matching: "{statusFilter}"
                   </td>
                 </tr>
               ) : (
